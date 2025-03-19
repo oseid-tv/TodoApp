@@ -1,4 +1,13 @@
-import { Text, View, StyleSheet, FlatList } from "react-native";
+import { useState } from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  FlatList,
+  SafeAreaView,
+  TextInput,
+  Button,
+} from "react-native";
 
 const mockData = [
   { id: 1, name: "Buy groceries" },
@@ -7,17 +16,27 @@ const mockData = [
 ];
 
 export default function Index() {
+  const [text, setText] = useState("");
+  const [todos, setTodos] = useState(mockData);
+
+  const addTodo = () => {
+    setTodos([...todos, { id: todos.length + 1, name: text }]);
+    setText("");
+  };
+
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.heading}>Todo App</Text>
+      <TextInput style={styles.input} value={text} onChangeText={setText} />
+      <Button title="Add" onPress={addTodo} />
       <FlatList
-        data={mockData}
+        data={todos}
         renderItem={({ item }) => (
           <Text style={styles.itemListed}>{item.name}</Text>
         )}
         keyExtractor={(item) => item.id.toString()}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -37,5 +56,12 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderWidth: 1,
     borderColor: "#ccc",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
+    marginVertical: 10,
+    width: "100%",
   },
 });
